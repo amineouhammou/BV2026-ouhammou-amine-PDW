@@ -1,0 +1,50 @@
+=== DOSSIERS ===
+
+--- src\common\api ---
+src\common\api\index.ts
+
+--- src\common\config ---
+src\common\config\app-config.module.ts
+src\common\config\env.service.ts
+src\common\config\index.ts
+src\common\config\environment\environment.validation.ts
+
+--- src\common\database ---
+src\common\database\database.module.ts
+src\common\database\typeorm-options.factory.ts
+src\common\database\entities\base-persistence.entity.ts
+
+--- src\common\logging ---
+ABSENT
+
+--- src\common\validation ---
+ABSENT
+
+--- src\core\account ---
+src\core\account\account-status.enum.ts
+src\core\account\account.controller.ts
+src\core\account\account.module.ts
+src\core\account\account.service.ts
+src\core\account\data\index.ts
+src\core\account\data\dto\account-response.dto.ts
+src\core\account\data\entity\account.entity.ts
+src\core\account\data\entity\index.ts
+
+--- src\core\auth ---
+ABSENT
+
+--- src\root ---
+src\root\app.module.ts
+src\root\index.ts
+
+=== DEPENDANCES ===
+api@0.0.1 C:\Users\User\Documents\PDW\BV2026-ouhammou-amine-PDW\api
+Ôö£ÔöÇÔöÇ typeorm@1.1.2
+ÔööÔöÇÔöÇ zod@4.6.5
+
+
+=== BUILD ===
+
+> api@0.0.1 build
+> nest build
+
