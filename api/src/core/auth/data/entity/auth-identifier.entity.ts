@@ -1,6 +1,6 @@
 import { Column, Entity, ForeignKey, Index } from 'typeorm';
 
-import { BasePersistenceEntity } from '@common/database/entities/base-persistence.entity.js';
+import { BasePersistenceEntity } from '@common/database/base/base-persistence.entity.js';
 import { ULID_LENGTH } from '@common/database/identifier/ulid.util.js';
 import { AccountEntity } from '@core/account/data/entity/account.entity.js';
 

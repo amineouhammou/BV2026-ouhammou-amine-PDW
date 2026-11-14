@@ -1,104 +1,179 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { AppMode } from './data/enum/app-mode.enum.js';
+import { ConfigKey } from './data/enum/config-key.enum.js';
+import { DatabaseType } from './data/enum/database-type.enum.js';
+import { LogLevel } from './data/enum/log-level.enum.js';
+import { ValidatedEnvironment } from './environment/environment.validation.js';
+
 @Injectable()
 export class EnvService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService<ValidatedEnvironment, true>,
+  ) {}
+
+  get appMode(): AppMode {
+    return this.get(ConfigKey.NodeEnv);
+  }
+
+  get appName(): string {
+    return this.get(ConfigKey.AppName);
+  }
 
   get appPort(): number {
-    return this.configService.get<number>('PORT') ?? 3000;
+    return this.get(ConfigKey.AppPort);
   }
 
-  get nodeEnv(): string {
-    return this.configService.get<string>('NODE_ENV') ?? 'development';
-  }
-  get dbHost(): string {
-    return this.configService.get<string>('DB_HOST') ?? 'localhost';
-  }
-  get dbPort(): number {
-    return this.configService.get<number>('DB_PORT') ?? 5432;
-  }
-  get dbUser(): string {
-    return this.configService.get<string>('DB_USER') ?? 'localhost';
-  }
-  get dbPassword(): string {
-    return this.configService.get<string>('DB_PASSWORD') ?? 'localhost';
+  get appBaseUrl(): string {
+    return this.get(ConfigKey.AppBaseUrl);
   }
 
-  get dbName(): string {
-    return this.configService.get<string>('DB_NAME') ?? 'localhost';
+  get corsOrigins(): string[] {
+    return this.get(ConfigKey.AppCorsOrigin);
+  }
+
+  get trustProxy(): boolean {
+    return this.get(ConfigKey.AppTrustProxy);
+  }
+
+  get httpPayloadErrorStatusCode(): number {
+    return this.get(ConfigKey.AppHttpPayloadErrorCode);
+  }
+
+  get logLevel(): LogLevel {
+    return this.get(ConfigKey.LogLevel);
+  }
+
+  get swaggerEnabled(): boolean {
+    return this.get(ConfigKey.SwaggerEnabled);
+  }
+
+  get swaggerTitle(): string {
+    return this.get(ConfigKey.SwaggerTitle);
+  }
+
+  get swaggerDescription(): string {
+    return this.get(ConfigKey.SwaggerDescription);
+  }
+
+  get swaggerVersion(): string {
+    return this.get(ConfigKey.SwaggerVersion);
+  }
+
+  get swaggerPath(): string {
+    return this.get(ConfigKey.SwaggerPath);
+  }
+
+  get databaseType(): DatabaseType {
+    return this.get(ConfigKey.DbType);
+  }
+
+  get databaseHost(): string {
+    return this.get(ConfigKey.DbHost);
+  }
+
+  get databasePort(): number {
+    return this.get(ConfigKey.DbPort);
+  }
+
+  get databaseUser(): string {
+    return this.get(ConfigKey.DbUser);
+  }
+
+  get databasePassword(): string {
+    return this.get(ConfigKey.DbPassword);
+  }
+  get databaseName(): string {
+    return this.get(ConfigKey.DbDatabase);
+  }
+
+  get databaseSynchronize(): boolean {
+    return this.get(ConfigKey.DbSync);
+  }
+
+  get databaseMigrationsRun(): boolean {
+    return this.get(ConfigKey.DbMigration);
+  }
+
+  get databaseLogging(): boolean {
+    return this.get(ConfigKey.DbLog);
+  }
+
+  get databaseSchema(): string {
+    return this.get(ConfigKey.DbSchema);
   }
 
   get passwordMinLength(): number {
-    return this.configService.get<number>('AUTH_PASSWORD_MIN_LENGTH') ?? 15;
+    return this.get(ConfigKey.AuthPasswordMinLength);
   }
+
   get passwordMaxLength(): number {
-    return this.configService.get<number>('AUTH_PASSWORD_MAX_LENGTH') ?? 128;
+    return this.get(ConfigKey.AuthPasswordMaxLength);
   }
+
   get passwordArgon2MemoryCost(): number {
-    return (
-      this.configService.get<number>('AUTH_PASSWORD_ARGON2_MEMORY_COST') ??
-      19456
-    );
+    return this.get(ConfigKey.AuthPasswordArgon2MemoryCost);
   }
+
   get passwordArgon2TimeCost(): number {
-    return (
-      this.configService.get<number>('AUTH_PASSWORD_ARGON2_TIME_COST') ?? 2
-    );
+    return this.get(ConfigKey.AuthPasswordArgon2TimeCost);
   }
+
   get passwordArgon2Parallelism(): number {
-    return (
-      this.configService.get<number>('AUTH_PASSWORD_ARGON2_PARALLELISM') ?? 1
-    );
+    return this.get(ConfigKey.AuthPasswordArgon2Parallelism);
   }
+
   get passwordMaxAttempts(): number {
-    return this.configService.get<number>('AUTH_PASSWORD_MAX_ATTEMPTS') ?? 5;
+    return this.get(ConfigKey.AuthPasswordMaxAttempts);
   }
+
   get passwordLockoutSeconds(): number {
-    return (
-      this.configService.get<number>('AUTH_PASSWORD_LOCKOUT_SECONDS') ?? 900
-    );
+    return this.get(ConfigKey.AuthPasswordLockoutSeconds);
   }
+
   get accessTokenTtlSeconds(): number {
-    return (
-      this.configService.get<number>('AUTH_ACCESS_TOKEN_TTL_SECONDS') ?? 600
-    );
+    return this.get(ConfigKey.AuthAccessTokenTtlSeconds);
   }
+
   get refreshTokenTtlSeconds(): number {
-    return (
-      this.configService.get<number>('AUTH_REFRESH_TOKEN_TTL_SECONDS') ?? 604800
-    );
+    return this.get(ConfigKey.AuthRefreshTokenTtlSeconds);
   }
+
   get sessionAbsoluteTtlSeconds(): number {
-    return (
-      this.configService.get<number>('AUTH_SESSION_ABSOLUTE_TTL_SECONDS') ??
-      2592000
-    );
+    return this.get(ConfigKey.AuthSessionAbsoluteTtlSeconds);
   }
+
   get refreshTokenPepper(): string {
-    return this.configService.get<string>('AUTH_REFRESH_TOKEN_PEPPER') ?? '';
+    return this.get(ConfigKey.AuthRefreshTokenPepper);
   }
+
   get jwtActiveKid(): string {
-    return (
-      this.configService.get<string>('AUTH_JWT_ACTIVE_KID') ?? 'dev-active'
-    );
+    return this.get(ConfigKey.AuthJwtActiveKid);
   }
+
   get jwtPrivateKeyBase64(): string {
-    return this.configService.get<string>('AUTH_JWT_PRIVATE_KEY_BASE64') ?? '';
+    return this.get(ConfigKey.AuthJwtPrivateKeyBase64);
   }
+
   get jwtPublicKeysJson(): string {
-    return this.configService.get<string>('AUTH_JWT_PUBLIC_KEYS_JSON') ?? '{}';
-  }
-  get isProduction(): boolean {
-    return this.nodeEnv === 'production';
-  }
-  get isTest(): boolean {
-    return this.nodeEnv === 'test';
+    return this.get(ConfigKey.AuthJwtPublicKeysJson);
   }
 
   get testRefreshFailurePoint(): string {
-    return (
-      this.configService.get<string>('AUTH_TEST_REFRESH_FAILURE_POINT') ?? ''
-    );
+    return this.get(ConfigKey.AuthTestRefreshFailurePoint);
+  }
+
+  get isProduction(): boolean {
+    return this.appMode === AppMode.Prod;
+  }
+
+  get isTest(): boolean {
+    return this.appMode === AppMode.Test;
+  }
+  get<TConfigKey extends ConfigKey>(
+    key: TConfigKey,
+  ): ValidatedEnvironment[TConfigKey] {
+    return this.configService.getOrThrow(key, { infer: true });
   }
 }

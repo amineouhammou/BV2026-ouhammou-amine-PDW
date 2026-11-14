@@ -1,6 +1,6 @@
 
 import { Entity, Column } from 'typeorm';
-import { BasePersistenceEntity } from '@common/database/entities/base-persistence.entity.js';
+import { BasePersistenceEntity } from '@common/database/base/base-persistence.entity.js';
 import { AccountStatus } from '@core/account/account-status.enum.js';
 
 @Entity({ name: 'account' })

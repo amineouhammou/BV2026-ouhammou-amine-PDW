@@ -1,13 +1,16 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './root/app.module.js';
-import {EnvService} from "@common/config/env.service.js";
+import { NestExpressApplication } from '@nestjs/platform-express';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+import { EnvService } from '@common/config/index.js';
+import { AppModule } from '@root/app.module.js';
+
+export const bootstrap = async (): Promise<void> => {
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule.register(),
+  );
 
   const envService = app.get(EnvService);
-
   await app.listen(envService.appPort);
-}
+};
 
-await bootstrap();
+void bootstrap();

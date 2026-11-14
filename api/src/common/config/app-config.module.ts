@@ -1,17 +1,24 @@
-import { Global, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import {validateEnvironment} from "@common/config/environment/environment.validation.js";
-import {EnvService} from "@common/config/env.service.js";
+
+import { EnvService } from './env.service.js';
+import { validateEnvironment } from './environment/environment.validation.js';
 
 @Global()
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validate: validateEnvironment,
-    }),
-  ],
-  providers: [EnvService],
-  exports: [EnvService],
-})
-export class AppConfigModule {}
+@Module({})
+export class AppConfigModule {
+  static register(): DynamicModule {
+    return {
+      module: AppConfigModule,
+      global: true,
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+          validate: validateEnvironment,
+        }),
+      ],
+      providers: [EnvService],
+      exports: [EnvService],
+    };
+  }
+}
