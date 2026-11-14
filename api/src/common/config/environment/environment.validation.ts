@@ -58,6 +58,15 @@ export const environmentSchema = z
     AUTH_JWT_ACTIVE_KID: z.string().default('dev-active'),
     AUTH_JWT_PRIVATE_KEY_BASE64: z.string().default(''),
     AUTH_JWT_PUBLIC_KEYS_JSON: z.string().default('{}'),
+    AUTH_TEST_REFRESH_FAILURE_POINT: z
+      .enum([
+        '',
+        'after-successor-persistence',
+        'after-consumed',
+        'during-session-revocation',
+        'during-family-revocation',
+      ])
+      .default(''),
   })
   .superRefine((environment, context) => {
     if (
@@ -82,6 +91,13 @@ export const environmentSchema = z
       });
     }
     if (environment.NODE_ENV === 'production') {
+      if (environment.AUTH_TEST_REFRESH_FAILURE_POINT) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['AUTH_TEST_REFRESH_FAILURE_POINT'],
+          message: 'Test failure injection is forbidden in production',
+        });
+      }
       if (!environment.AUTH_REFRESH_TOKEN_PEPPER) {
         context.addIssue({
           code: z.ZodIssueCode.custom,

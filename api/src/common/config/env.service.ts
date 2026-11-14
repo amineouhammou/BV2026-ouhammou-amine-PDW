@@ -95,4 +95,10 @@ export class EnvService {
   get isTest(): boolean {
     return this.nodeEnv === 'test';
   }
+
+  get testRefreshFailurePoint(): string {
+    return (
+      this.configService.get<string>('AUTH_TEST_REFRESH_FAILURE_POINT') ?? ''
+    );
+  }
 }

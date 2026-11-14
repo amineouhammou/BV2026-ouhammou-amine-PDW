@@ -1,9 +1,9 @@
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { AccountEntity } from './data/entity/account.entity.js';
 import { AccountResponseDto } from './data/dto/account-response.dto.js';
+import { AccountStatus } from './account-status.enum.js';
 
 @Injectable()
 export class AccountService {
@@ -25,9 +25,7 @@ export class AccountService {
     };
   }
 
-  async getAccountResponse(
-    id: string,
-  ): Promise<AccountResponseDto> {
+  async getAccountResponse(id: string): Promise<AccountResponseDto> {
     const account = await this.findById(id);
 
     if (!account) {
@@ -35,5 +33,26 @@ export class AccountService {
     }
 
     return this.toResponse(account);
+  }
+
+  async findByIdInTransaction(
+    manager: EntityManager,
+    id: string,
+  ): Promise<AccountEntity | null> {
+    return manager.getRepository(AccountEntity).findOneBy({ id });
+  }
+
+  async create(manager: EntityManager): Promise<AccountEntity> {
+    const repository = manager.getRepository(AccountEntity);
+    const account = repository.create({
+      status: AccountStatus.Active,
+      anonymizedAt: null,
+    });
+
+    return repository.save(account);
+  }
+
+  canAuthenticate(account: AccountEntity): boolean {
+    return account.status === AccountStatus.Active;
   }
 }
