@@ -1,7 +1,8 @@
+import { Column, Entity } from 'typeorm';
 
-import { Entity, Column } from 'typeorm';
-import { BasePersistenceEntity } from '@common/database/base/base-persistence.entity.js';
-import { AccountStatus } from '@core/account/account-status.enum.js';
+import { BasePersistenceEntity } from '@common/database/index.js';
+
+import { AccountStatus } from '../enum/account-status.enum.js';
 
 @Entity({ name: 'account' })
 export class AccountEntity extends BasePersistenceEntity {
@@ -13,10 +14,6 @@ export class AccountEntity extends BasePersistenceEntity {
   })
   status!: AccountStatus;
 
-  @Column({
-    name: 'anonymized_at',
-    type: 'timestamptz',
-    nullable: true,
-  })
+  @Column({ name: 'anonymized_at', type: 'timestamptz', nullable: true })
   anonymizedAt!: Date | null;
 }

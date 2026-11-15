@@ -1,4 +1,3 @@
-
 export enum AccountStatus {
   Active = 'ACTIVE',
   Locked = 'LOCKED',

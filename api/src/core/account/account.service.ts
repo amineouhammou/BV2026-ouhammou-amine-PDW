@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+
+import { ApiCodeResponse, ApiException } from '@common/api/index.js';
+
+import { AccountResponseDto } from './data/dto/response/account-response.dto.js';
 import { AccountEntity } from './data/entity/account.entity.js';
-import { AccountResponseDto } from './data/dto/account-response.dto.js';
-import { AccountStatus } from './account-status.enum.js';
+import { AccountStatus } from './data/enum/account-status.enum.js';
 
 @Injectable()
 export class AccountService {
@@ -16,23 +19,22 @@ export class AccountService {
     return this.accountRepository.findOneBy({ id });
   }
 
-  toResponse(account: AccountEntity): AccountResponseDto {
+  async me(accountId: string): Promise<AccountResponseDto> {
+    const account = await this.findById(accountId);
+    if (!account) {
+      throw new ApiException({
+        statusCode: HttpStatus.NOT_FOUND,
+        code: ApiCodeResponse.AccountNotFound,
+        logMessage: 'Current account was not found',
+      });
+    }
+
     return {
       id: account.id,
       status: account.status,
       createdAt: account.createdAt.toISOString(),
       updatedAt: account.updatedAt.toISOString(),
     };
-  }
-
-  async getAccountResponse(id: string): Promise<AccountResponseDto> {
-    const account = await this.findById(id);
-
-    if (!account) {
-      throw new NotFoundException(`Account does not exist`);
-    }
-
-    return this.toResponse(account);
   }
 
   async findByIdInTransaction(
@@ -43,13 +45,12 @@ export class AccountService {
   }
 
   async create(manager: EntityManager): Promise<AccountEntity> {
-    const repository = manager.getRepository(AccountEntity);
-    const account = repository.create({
+    const account = manager.getRepository(AccountEntity).create({
       status: AccountStatus.Active,
       anonymizedAt: null,
     });
 
-    return repository.save(account);
+    return manager.getRepository(AccountEntity).save(account);
   }
 
   canAuthenticate(account: AccountEntity): boolean {
