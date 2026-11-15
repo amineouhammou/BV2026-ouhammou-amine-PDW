@@ -3,7 +3,6 @@ export enum ApiCodeResponse {
   CommonError = 'api.common.error',
   CommonValidationError = 'api.common.validation-error',
   CommonInvalidIdentifier = 'api.common.invalid-identifier',
-
   AuthRegistrationSuccess = 'api.auth.register.success',
   AuthLoginSuccess = 'api.auth.login.success',
   AuthInvalidCredentials = 'api.auth.invalid-credentials',
@@ -14,10 +13,8 @@ export enum ApiCodeResponse {
   AuthRefreshInvalid = 'api.auth.refresh-invalid',
   AuthLogoutSuccess = 'api.auth.logout.success',
   AuthLogoutAllSuccess = 'api.auth.logout-all.success',
-
   AuthCsrfInvalid = 'api.security.csrf-invalid',
   AuthOriginInvalid = 'api.security.origin-invalid',
-
   AccountMeSuccess = 'api.account.me.success',
   AccountNotFound = 'api.account.not-found',
 }

@@ -1,5 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
+import { ApiInterceptor } from '@common/api/index.js';
 import { AppConfigModule } from '@common/config/index.js';
 import { DatabaseModule } from '@common/database/database.module.js';
 import {
@@ -23,7 +24,7 @@ export class AppModule {
         AccountModule,
         AuthModule,
       ],
-      providers: [ApplicationLifecycleLogger],
+      providers: [ApiInterceptor, ApplicationLifecycleLogger],
     };
   }
 }
