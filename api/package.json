@@ -28,6 +28,7 @@
     "@nestjs/observe": "^0.1.8",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.4.7",
+    "@nestjs/throttler": "^6.7.1",
     "@nestjs/typeorm": "^11.0.3",
     "argon2": "^0.45.2",
     "class-transformer": "^0.5.1",
