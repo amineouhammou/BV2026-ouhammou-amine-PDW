@@ -1,8 +1,13 @@
+import { json, urlencoded } from 'express';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import {
   INestApplication,
   RequestMethod,
   ValidationPipe,
 } from '@nestjs/common';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface.js';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 import {
   ApiInterceptor,
@@ -14,6 +19,8 @@ import { EnvService } from '@common/config/index.js';
 
 export const configureApplication = (app: INestApplication): void => {
   const envService = app.get(EnvService);
+
+  configureHttp(app, envService);
 
   app.setGlobalPrefix(envService.appBaseUrl, {
     exclude: [
@@ -40,4 +47,30 @@ export const configureApplication = (app: INestApplication): void => {
   app.useGlobalInterceptors(app.get(ApiInterceptor));
 
   setupSwagger(app);
+};
+
+const configureHttp = (app: INestApplication, envService: EnvService): void => {
+  app.use(json({ limit: '1mb' }));
+  app.use(urlencoded({ extended: true, limit: '1mb' }));
+  app.use(cookieParser());
+  app.use(helmet());
+
+  const corsOptions: CorsOptions = {
+    origin: (origin, callback) => {
+      if (!origin || envService.corsOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Origin is not allowed by CORS'), false);
+    },
+    credentials: true,
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept', 'X-CSRF-Token'],
+    maxAge: 600,
+  };
+
+  app.enableCors(corsOptions);
+
+  (app as NestExpressApplication).set('trust proxy', envService.trustProxy);
 };
