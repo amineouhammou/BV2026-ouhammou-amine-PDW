@@ -4,6 +4,7 @@ import { Logger } from 'nestjs-pino';
 
 import { EnvService } from '@common/config/index.js';
 import { AppLogger } from '@common/logging/index.js';
+import { configureApplication } from '@root/bootstrap/application-bootstrap.js';
 import { AppModule } from '@root/app.module.js';
 
 export const bootstrap = async (): Promise<void> => {
@@ -14,6 +15,7 @@ export const bootstrap = async (): Promise<void> => {
     },
   );
 
+  configureApplication(app);
   app.useLogger(app.get(Logger));
   app.enableShutdownHooks();
 

@@ -24,9 +24,7 @@ export class ValidationException extends ApiException<null> {
     statusCode: HttpStatus,
   ): ValidationException {
     return new ValidationException(
-      errors.map((error) =>
-        ValidationException.mapValidationError(error),
-      ),
+      errors.map((error) => ValidationException.mapValidationError(error)),
       statusCode,
     );
   }
@@ -42,10 +40,7 @@ export class ValidationException extends ApiException<null> {
       property: error.property,
       messages: Object.entries(error.constraints ?? {}).map(
         ([constraint, message]) =>
-          ValidationException.toMachineReadableMessage(
-            constraint,
-            message,
-          ),
+          ValidationException.toMachineReadableMessage(constraint, message),
       ),
       ...(children?.length ? { children } : {}),
     };
